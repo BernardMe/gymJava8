@@ -1,11 +1,13 @@
 package org.learnit.sensitiveword;
 
-import java.io.*;
-import java.net.URL;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -21,13 +23,13 @@ public class SensitiveWordInit {
 
 	@SuppressWarnings("rawtypes")
 	public HashMap sensitiveWordMap;
-	
+
 	public SensitiveWordInit(){
 		super();
 	}
-	
+
 	/**
-	 * @author chenming 
+	 * @author chenming
 	 * @date 2014年4月20日 下午2:28:32
 	 * @version 1.0
 	 */
@@ -74,7 +76,7 @@ public class SensitiveWordInit {
 	 *              }
 	 *      	}
 	 *      }
-	 * @author chenming 
+	 * @author chenming
 	 * @date 2014年4月20日 下午3:04:20
 	 * @param keyWordSet  敏感词库
 	 * @version 1.0
@@ -82,7 +84,7 @@ public class SensitiveWordInit {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void addSensitiveWordToHashMap(Set<String> keyWordSet) {
 		sensitiveWordMap = new HashMap(keyWordSet.size());     //初始化敏感词容器，减少扩容操作
-		String key = null;  
+		String key = null;
 		Map nowMap = null;
 		Map<String, String> newWorMap = null;
 		//迭代keyWordSet
@@ -93,7 +95,7 @@ public class SensitiveWordInit {
 			for(int i = 0 ; i < key.length() ; i++){
 				char keyChar = key.charAt(i);       //转换成char型
 				Object wordMap = nowMap.get(keyChar);       //获取
-				
+
 				if(wordMap != null){        //如果存在该key，直接赋值
 					nowMap = (Map) wordMap;
 				}
@@ -103,7 +105,7 @@ public class SensitiveWordInit {
 					nowMap.put(keyChar, newWorMap);
 					nowMap = newWorMap;
 				}
-				
+
 				if(i == key.length() - 1){
 					nowMap.put("isEnd", "1");    //最后一个
 				}
@@ -113,11 +115,11 @@ public class SensitiveWordInit {
 
 	/**
 	 * 读取敏感词库中的内容，将内容添加到set集合中
-	 * @author chenming 
-	 * @date 2014年4月20日 下午2:31:18
+	 * @author wangzhuo
+	 * @date 20201107 14:31:18
 	 * @return
-	 * @version 1.0
-	 * @throws Exception 
+	 * @version 1.1
+	 * @throws Exception
 	 */
 	@SuppressWarnings("resource")
 	private Set<String> readSensitiveWordFile() throws Exception{
@@ -125,9 +127,6 @@ public class SensitiveWordInit {
 
 		//File file = new File(this.getClass().getResource("/").getPath().concat("SensitiveWord.txt"));    //读取文件
 		//InputStreamReader read = new InputStreamReader(new FileInputStream(file),ENCODING);
-		// 使用ClassLoader加载properties配置文件生成对应的输入流
-		InputStream in = SensitiveWordInit.class.getClassLoader().getResourceAsStream("cfg/SensitiveWord.txt");
-		InputStreamReader read = new InputStreamReader(in, ENCODING);
 //		try {
 //			if(file.isFile() && file.exists()){      //文件流是否存在
 //				set = new HashSet<String>();
@@ -141,22 +140,27 @@ public class SensitiveWordInit {
 //				throw new Exception("敏感词库文件不存在");
 //			}
 
+		// 使用ClassLoader加载properties配置文件生成对应的输入流
+		InputStream in = SensitiveWordInit.class.getClassLoader().getResourceAsStream("cfg/SensitiveWord.txt");
+		InputStreamReader reader = null;
 		try {
 			if(null != in){      //文件流是否存在
+				reader = new InputStreamReader(in, ENCODING);
 				set = new HashSet<String>();
-				BufferedReader bufferedReader = new BufferedReader(read);
+				BufferedReader bufferedReader = new BufferedReader(reader);
 				String txt = null;
 				while((txt = bufferedReader.readLine()) != null){    //读取文件，将文件内容放入到set中
 					set.add(txt);
 				}
-			}
-			else{         //不存在抛出异常信息
+			}else{         //不存在抛出异常信息
 				throw new Exception("敏感词库文件不存在");
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw e;
 		}finally{
-			read.close();     //关闭文件流
+			//assert reader!=null:"输入流reader不能为空";	//在生产环境下不建议使用assert功能的，一般都是在测试类里面使用的比较多
+			Objects.requireNonNull(reader, "输入流reader不能为空").close();     //关闭文件流
 		}
 		return set;
 	}
