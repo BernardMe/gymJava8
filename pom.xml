@@ -26,6 +26,10 @@
 		<slf4j.version>1.7.25</slf4j.version>
 		<junit.version>4.13</junit.version>
 		<disruptor.version>3.4.2</disruptor.version>
+		<!--七牛云-->
+		<qiniu.version>7.2.11</qiniu.version>
+		<!-- JSON -->
+		<fastjson.version>1.2.47</fastjson.version>
 	</properties>
 
 	<!-- @TODO -->
@@ -72,6 +76,27 @@
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.qiniu</groupId>
+			<artifactId>qiniu-java-sdk</artifactId>
+			<version>${qiniu.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- alibaba工具包 -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>${fastjson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
 		</dependency>
 		<!-- 日志文件管理包 -->
 		<dependency>
