@@ -6,9 +6,14 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.HashMap;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonObject;
+import com.qiniu.http.Client;
+import com.qiniu.util.StringMap;
 import com.sun.crypto.provider.HmacMD5;
 import okhttp3.Headers;
 import org.apache.commons.lang3.StringUtils;
@@ -22,8 +27,6 @@ import com.qiniu.storage.model.BatchStatus;
 import com.qiniu.util.Auth;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 
 import static javax.xml.crypto.dsig.DigestMethod.SHA1;
 
@@ -82,29 +85,38 @@ public class BatchStat {
         return resultStr;
     }
 
-   /**
-     * 根据key检查七牛云审核状态
+    /**
+     * 根据imageUrl检查七牛云图片审核状态
      * 注意:单次请求
      * @param
      * @return
      */
-    public static String buildAuthString(String method, String path, String host) throws QiniuException, NoSuchAlgorithmException,
-            InvalidKeyException, UnsupportedEncodingException {
-        String data = String.format("data = %s %s?<RawQuery>\nHost: %s\n\n", method, path, host);
-        /* 七牛上传不能自动获取区域，只能手动设置 */
-
-        SecretKeySpec signingKey = new SecretKeySpec(SECRET_KEY.getBytes(ENCODING), HMAC_SHA1_ALGORITHM);
-        Mac mac = Mac.getInstance(HMAC_SHA1_ALGORITHM);
-        mac.init(signingKey);
-        byte[] signData = mac.doFinal(data.getBytes(ENCODING));
-        Base64.Encoder urlEncoder = Base64.getUrlEncoder();
-        String signature = urlEncoder.encodeToString(signData);
-
-
-        log.info(signature);
-
-        String qiniuToken = String.format("Qiniu %s:%s", ACCESS_KEY, signature);
-        return qiniuToken;
+    public static JSONObject checkImage(String imageUrl) {
+        //基础参数拼接
+        String url = "http://ai.qiniuapi.com/v3/image/censor";
+        String host = "ai.qiniuapi.com";
+        String body = "{ \"data\": { \"uri\": \""+imageUrl+"\" }, \"params\": { \"scenes\": [ \"pulp\", \"terror\", \"politician\" ] } }";
+        String contentType = "application/json";
+        String method = "POST";
+        Auth auth = Auth.create(ACCESS_KEY, SECRET_KEY);
+        String qiniuToken = "Qiniu " + auth.signRequestV2(url, method, body.getBytes(), contentType);
+        log.info("url={},body={},qiniuToken={}",url,body,qiniuToken);
+        //头部部分
+        StringMap header = new StringMap();
+        header.put("Host",host);
+        header.put("Authorization",qiniuToken);
+        header.put("Content-Type", contentType);
+        Configuration c = new Configuration(Zone.zone1());
+        Client client = new Client(c);
+        try {
+            Response response = client.post(url, body.getBytes(), header, contentType);
+            log.info("response result={}",response.bodyString());
+            JSONObject checkResult = JSON.parseObject(response.bodyString());
+            return checkResult;
+        } catch (QiniuException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
