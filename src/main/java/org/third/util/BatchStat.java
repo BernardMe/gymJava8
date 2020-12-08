@@ -29,8 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 public class BatchStat {
 
     // 设置需要操作的账号的AK和SK
-    private static String ACCESS_KEY = "UEAq301iSGQxYFtbTH0WaVm2zGKCqxg80Qy88hTs";
-    private static String SECRET_KEY = "GPC8DZuXOi7Y2fOPJr5blm5L1vQwychRXQvU1dr2";
+    private static String ACCESS_KEY = "AK";
+    private static String SECRET_KEY = "SK";
     private static String bucket = "ijxapp";
 
     private static final String ENCODING = "UTF-8";
