@@ -1,39 +1,26 @@
 package org.third.util;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.HashMap;
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.google.gson.JsonObject;
-import com.qiniu.http.Client;
-import com.qiniu.util.StringMap;
-import com.sun.crypto.provider.HmacMD5;
-import okhttp3.Headers;
-import org.apache.commons.lang3.StringUtils;
-
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
+import com.qiniu.http.Client;
 import com.qiniu.http.Response;
 import com.qiniu.storage.BucketManager;
 import com.qiniu.storage.Configuration;
 import com.qiniu.storage.model.BatchStatus;
 import com.qiniu.util.Auth;
+import com.qiniu.util.StringMap;
 import lombok.extern.slf4j.Slf4j;
-
-
-import static javax.xml.crypto.dsig.DigestMethod.SHA1;
 
 /**
  * <p>Title:检查七牛云上传状态工具类</p>
  * <p>Description:</p>
- * <p>Copyright: Copyright (c) 郑州家音顺达通讯有限公司 2019</p>
  * @author :  wangzhuo
  * @Description :
  * @Date:  2019-07-22 11:19
@@ -50,50 +37,14 @@ public class BatchStat {
     private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 
     /**
-     * 根据key检查七牛云审核状态
-     * 注意:单次请求
-     * @param url
-     * @return
-     */
-    public static String getAuditStatus(String url, String token) throws QiniuException {
-        Auth auth = Auth.create(ACCESS_KEY, SECRET_KEY);
-        /* 七牛上传不能自动获取区域，只能手动设置 */
-        Zone z = Zone.zone0();
-        //构造一个带指定Zone对象的配置类
-        Configuration c = new Configuration(z);
-
-        OkHttpUtils httpUtils = OkHttpUtils.getInstance();
-
-
-
-        HashMap map = new HashMap();
-        HashMap data = new HashMap();
-        data.put("uri", url);
-        HashMap params = new HashMap();
-        params.put("scenes", new String[]{"pulp", "terror", "politician"});
-        map.put("data", data);
-        map.put("params", params);
-
-        String jsonString = JSONObject.toJSONString(map);
-
-
-        String resultStr = httpUtils.doPostWithHeadersJson("http://ai.qiniuapi.com/v3/video/censor", "Authorization", token, jsonString);
-
-        log.info(resultStr);
-
-
-        return resultStr;
-    }
-
-    /**
-     * 根据imageUrl检查七牛云图片审核状态
-     * 注意:单次请求
-     * @param
+     * 根据视频url获取七牛云审核jobId
+     *
+     * @param imageUrl
      * @return
      */
     public static JSONObject checkImage(String imageUrl) {
         //基础参数拼接
-        String url = "http://ai.qiniuapi.com/v3/image/censor";
+        String url = "http://ai.qiniuapi.com/v3/video/censor";
         String host = "ai.qiniuapi.com";
         String body = "{ \"data\": { \"uri\": \""+imageUrl+"\" }, \"params\": { \"scenes\": [ \"pulp\", \"terror\", \"politician\" ] } }";
         String contentType = "application/json";
@@ -118,6 +69,39 @@ public class BatchStat {
         }
         return null;
     }
+
+    /**
+     * 根据jobId查询七牛云视频审核结果
+     *
+     * @param jobId
+     * @return
+     */
+    public static JSONObject checkJob(String jobId) {
+        //基础参数拼接
+        String url = String.format("http://ai.qiniuapi.com/v3/jobs/video/%s", jobId);
+        String host = "ai.qiniuapi.com";
+        String method = "GET";
+        Auth auth = Auth.create(ACCESS_KEY, SECRET_KEY);
+        StringMap map = auth.authorizationV2(url);
+        String qiniuToken = String.valueOf(map.get("Authorization"));
+        log.info("url={},,qiniuToken={}", url, qiniuToken);
+        //头部部分
+        StringMap header = new StringMap();
+        header.put("Host",host);
+        header.put("Authorization",qiniuToken);
+        Configuration c = new Configuration(Zone.zone1());
+        Client client = new Client(c);
+        try {
+            Response response = client.get(url, header);
+            log.info("response result={}",response.bodyString());
+            JSONObject checkResult = JSON.parseObject(response.bodyString());
+            return checkResult;
+        } catch (QiniuException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     /**
      * 根据key检查七牛云上传状态
