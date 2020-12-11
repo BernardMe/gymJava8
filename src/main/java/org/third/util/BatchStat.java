@@ -1,10 +1,5 @@
 package org.third.util;
 
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-
-import org.apache.commons.lang3.StringUtils;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.qiniu.common.QiniuException;
@@ -17,6 +12,13 @@ import com.qiniu.storage.model.BatchStatus;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+
+import static org.third.util.Constants.QINIU_JOBID_NA;
+import static org.third.util.Constants.QINIU_SUGGESTION_NA;
 
 /**
  * <p>Title:检查七牛云上传状态工具类</p>
@@ -42,7 +44,7 @@ public class BatchStat {
      * @param imageUrl
      * @return
      */
-    public static JSONObject checkImage(String imageUrl) {
+    public static String getAuditJobId(String imageUrl) throws QiniuException {
         //基础参数拼接
         String url = "http://ai.qiniuapi.com/v3/video/censor";
         String host = "ai.qiniuapi.com";
@@ -61,10 +63,17 @@ public class BatchStat {
         Client client = new Client(c);
         try {
             Response response = client.post(url, body.getBytes(), header, contentType);
-            log.info("response result={}",response.bodyString());
-            JSONObject checkResult = JSON.parseObject(response.bodyString());
-            return checkResult;
-        } catch (QiniuException e) {
+            String bodyString = response.bodyString();
+            log.info("response result={}", bodyString);
+            JSONObject resultObj = JSON.parseObject(bodyString);
+            String jobId = null;
+            if (null != resultObj) {
+                jobId = StringUtils.isNotEmpty(resultObj.getString("job")) ? resultObj.getString("job") : QINIU_JOBID_NA;
+            } else {
+                jobId = QINIU_JOBID_NA;
+            }
+            return jobId;
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -76,7 +85,7 @@ public class BatchStat {
      * @param jobId
      * @return
      */
-    public static JSONObject checkJob(String jobId) {
+    public static String checkJob(String jobId) throws QiniuException {
         //基础参数拼接
         String url = String.format("http://ai.qiniuapi.com/v3/jobs/video/%s", jobId);
         String host = "ai.qiniuapi.com";
@@ -93,15 +102,22 @@ public class BatchStat {
         Client client = new Client(c);
         try {
             Response response = client.get(url, header);
-            log.info("response result={}",response.bodyString());
-            JSONObject checkResult = JSON.parseObject(response.bodyString());
-            return checkResult;
+            String bodyString = response.bodyString();
+            log.info("response result={}", bodyString);
+            JSONObject checkResult = JSONObject.parseObject(bodyString);
+            JSONObject resultObj = checkResult.getJSONObject("result");
+            String suggestion = null;
+            if (null != resultObj) {
+                suggestion = resultObj.getJSONObject("result").getString("suggestion");
+            } else {
+                suggestion = QINIU_SUGGESTION_NA;
+            }
+            return suggestion;
         } catch (QiniuException e) {
             e.printStackTrace();
         }
         return null;
     }
-
 
     /**
      * 根据key检查七牛云上传状态
@@ -168,5 +184,4 @@ public class BatchStat {
         }
         return null;
     }
-
 }
