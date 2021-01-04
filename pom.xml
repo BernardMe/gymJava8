@@ -24,6 +24,8 @@
 		<logs.path>/output/logs</logs.path>
 		<!-- log4j日志文件管理包版本 -->
 		<slf4j.version>1.7.25</slf4j.version>
+		<!-- MQ-->
+		<activemq.version>5.13.3</activemq.version>
 		<junit.version>4.13</junit.version>
 		<disruptor.version>3.4.2</disruptor.version>
 		<!--七牛云-->
@@ -71,6 +73,12 @@
 	</repositories>
 
 	<dependencies>
+		<!-- activemq -->
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-spring</artifactId>
+			<version>${activemq.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
