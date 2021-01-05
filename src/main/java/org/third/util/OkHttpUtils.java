@@ -187,7 +187,7 @@ public class OkHttpUtils {
         //String url = "http://172.18.9.166:8899/demo/postByMap?loginName=admin&loginPassword=Hans1107laser";
         String url = "http://101.133.147.220:8079/ocrGatewayAction_ocr";
         HashMap<String, String> map1 = new HashMap<>();
-        map1.put("vendor","joinUS");
+        map1.put("vendor","learnIt");
         map1.put("vendorKey","rejF40924sUs311TJbLoN");
         map1.put("url","https://img.967111.com/import-article-taro/pigai/2020/02/14/22/25/28sXJU0vIM4.jpg");
         String result = OkHttpUtils.getInstance().doPostForm(url, map1);

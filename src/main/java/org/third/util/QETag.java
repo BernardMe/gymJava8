@@ -3,9 +3,7 @@ package org.third.util;
 /**
  * <p>Title:QETag</p>
  * <p>Description: Etag算法类</p>
- * <p>Copyright: Copyright (c) 郑州家音顺达通讯有限公司 2019</p>
  * @author :  wangzhuo
- * @Copyright :  Copyright(c) 郑州家音顺达通讯有限公司 2019
  * @Creation Date:  2019-07-23 11:14
  */
 /*

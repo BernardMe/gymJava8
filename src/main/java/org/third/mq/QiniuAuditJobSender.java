@@ -12,9 +12,7 @@ import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * <p> Title: QiniuAuditJobSender </p>
- * <p> Description: 七牛审核job消息发送类</p>
- * <p> Copyright: Copyright (c) 郑州家音顺达通讯有限公司 2019 </p>
+ * @Description: 七牛审核job消息发送类</p>
  * @author wangzhuo
  * @version
  * @date 创建日期：20201207
@@ -35,7 +33,7 @@ public class QiniuAuditJobSender {
 		executorService.submit(new Runnable() {
 			@Override
 			public void run() {
-				//queueSender.send("joinus.qiniuAuditJobSender", jobInfo);
+				//queueSender.send("learnit.qiniuAuditJobSender", jobInfo);
 				log.info("QiniuAuditJobSender成功发送了一条JMS消息: {}", JSON.toJSONString(jobInfo));
 			}
 		});

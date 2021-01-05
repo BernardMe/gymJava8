@@ -63,7 +63,7 @@
 		<Logger name="org.springframework" level="INFO" />
 		<Logger name="org.mybatis.spring" level="INFO" />
 		<Logger name="org.apache.zookeeper" level="INFO" />
-		<Logger name="com.joinus" level="DEBUG" includeLocation="true" />
+		<Logger name="org.learnit" level="DEBUG" includeLocation="true" />
 		<Root level="DEBUG">
 			<AppenderRef ref="Console" />
 			<AppenderRef ref="InfoLog" />

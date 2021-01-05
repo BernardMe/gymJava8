@@ -5,9 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * <p> Title: QiniuAuditJobMqInfo </p>
- * <p> Description:七牛审核job发送MQ参数类 </p>
- * <p> Copyright: Copyright (c) 郑州家音顺达通讯有限公司 2018 </p>
+ * @Description:七牛审核job发送MQ参数类 </p>
  * @author wangzhuo
  * @version
  * @date 创建日期：20201207

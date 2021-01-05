@@ -4,7 +4,6 @@ package org.learnit.essential;
  * @author :  wangzhuo
  * @Title Name :
  * @Description :
- * @Copyright :  Copyright(c) 郑州家音顺达通讯有限公司 2019
  * @Creation Date:  2020-09-14 9:38
  */
 public class PrimaryTypeTest01 {
