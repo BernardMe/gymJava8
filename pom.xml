@@ -20,6 +20,8 @@
 	</parent>
 	
 	<properties>
+		<!-- spring版本号 -->
+		<spring.version>5.2.7.RELEASE</spring.version>
 		<!-- log4j日志配置 -->
 		<logs.path>/output/logs</logs.path>
 		<!-- log4j日志文件管理包版本 -->
@@ -136,6 +138,28 @@
 			<groupId>com.lmax</groupId>
 			<artifactId>disruptor</artifactId>
 			<version>${disruptor.version}</version>
+		</dependency>
+		<!-- spring核心包 -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
+		<!-- SpringMVC -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
 		</dependency>
 	</dependencies>
 
