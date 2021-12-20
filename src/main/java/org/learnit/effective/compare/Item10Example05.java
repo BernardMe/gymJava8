@@ -1,4 +1,4 @@
-package org.learnit.compare;
+package org.learnit.effective.compare;
 
 import java.awt.Color;
 import java.util.Objects;
@@ -53,7 +53,7 @@ class ColorPoint03 {
 
 }
 
-// 绠€鍗曚笉鍙彉鐨勪簩缁存暣鏁扮被鍨� Point 绫�
+// 简单不可变的二维整数类Point03
 class Point03 {
     public final int x;
     public final int y;

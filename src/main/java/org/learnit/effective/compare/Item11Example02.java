@@ -1,4 +1,4 @@
-package org.learnit.compare;
+package org.learnit.effective.compare;
 
 import java.util.HashMap;
 import java.util.Map;

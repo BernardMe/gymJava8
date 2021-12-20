@@ -1,4 +1,4 @@
-package org.learnit.compare;
+package org.learnit.effective.compare;
 
 import java.awt.Color;
 
@@ -35,7 +35,7 @@ class ColorPoint01 extends Point01 {
 
 }
 
-// 绠€鍗曚笉鍙彉鐨勪簩缁存暣鏁扮被鍨� Point01 绫�
+// 简单不可变的二维整数类 Point01
 class Point01 {
     private final int x;
     private final int y;

@@ -1,4 +1,4 @@
-package org.learnit.compare;
+package org.learnit.effective.compare;
 
 import org.learnit.oop.Animal;
 

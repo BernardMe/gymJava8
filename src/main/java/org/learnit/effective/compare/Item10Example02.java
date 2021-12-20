@@ -1,4 +1,4 @@
-package org.learnit.compare;
+package org.learnit.effective.compare;
 
 import java.util.Objects;
 
@@ -24,7 +24,7 @@ public class Item10Example02 {
     }
 }
 
-// 瀹炵幇浜嗕笉鍖哄垎澶у皬鍐欑殑瀛楃涓层€傚瓧绗︿覆琚� toString 淇濆瓨锛屼絾鍦� equals 姣旇緝涓蹇界暐
+// 实现了不区分大小写的字符串。字符串? toString 保存，但? equals 比较中被忽略
 class CaseInsensitiveString02 {
     private final String s;
 
@@ -32,7 +32,7 @@ class CaseInsensitiveString02 {
         this.s = Objects.requireNonNull(s);
     }
 
-    // Broken - violates symmetry!
+    // Item10Example01中违反对称性，解决这个问题，只需要把企图与 String 互操作的代码从 equals 方法中去掉就可以了
     @Override
     public boolean equals(Object o) {
         return o instanceof CaseInsensitiveString02 && ((CaseInsensitiveString02)o).s.equalsIgnoreCase(s);
