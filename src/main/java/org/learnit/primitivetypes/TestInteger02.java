@@ -1,4 +1,4 @@
-package org.learnit.numerical;
+package org.learnit.primitivetypes;
 
 /**
  * Integer类型计算测试02
@@ -21,6 +21,15 @@ public class TestInteger02 {
     public static void main(String[] args) {
         short a = 1;
         short b = 2;
+        short d = (short) (a + b);
+
+        int ii;
+        Integer i = new Integer(1);
+        ii = i;
+
+        String t1 = "12345";
+        String t2 = "12" + new String("345");
+        System.out.println(String.format("t1 == t2 >> %s", t1 == t2));
 
         int c = a + b;
 

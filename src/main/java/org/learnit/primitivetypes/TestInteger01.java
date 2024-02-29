@@ -1,4 +1,4 @@
-package org.learnit.numerical;
+package org.learnit.primitivetypes;
 
 /**
  * Integer类型计算测试01
