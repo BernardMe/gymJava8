@@ -2,15 +2,11 @@ package org.learnit.engineering.practice.signin;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
-import com.common.sdk.api.web.http.common.EntityResult;
-import com.common.sdk.api.web.http.common.OptResult;
-import com.zzjdyf.pt.constant.RedisConstant;
-import com.zzjdyf.pt.entity.po.user.plantation.PlantationUserSignPO;
-import com.zzjdyf.pt.service.user.entity.UserBaseInfo;
-import com.zzjdyf.pt.service.user.entity.UserBuyContext;
-import com.zzjdyf.pt.service.user.entity.UserEnvironmentInfo;
-import com.zzjdyf.pt.service.user.plantation.sign.PlantationUserSignService;
-import com.zzjdyf.pt.tools.util.ResultUtil;
+import org.learnit.engineering.practice.tools.util.ResultUtil;
+import org.learnit.engineering.practice.user.entity.UserBaseInfo;
+import org.learnit.engineering.practice.user.entity.UserEnvironmentInfo;
+import org.learnit.engineering.practice.web.common.EntityResult;
+import org.learnit.engineering.practice.web.common.OptResult;
 import org.springframework.data.redis.connection.BitFieldSubCommands;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,10 +24,10 @@ import java.util.List;
 @Service
 public class PlantationUserSignServiceImpl implements PlantationUserSignService {
 
-    @Resource(name = RedisConstant.REDIS_NAME_SINGLE)
+    @Resource(name = "stringRedis")
     private RedisTemplate redis;
 
-    public EntityResult<PlantationUserSignPO> doSign(UserEnvironmentInfo envir, UserBuyContext context, UserBaseInfo userInfo, String dateStr) {
+    public EntityResult<PlantationUserSignPO> doSign(UserEnvironmentInfo envir, UserBaseInfo userInfo, String dateStr) {
         PlantationUserSignPO result = new PlantationUserSignPO();
         OptResult opt = new OptResult();
         // 获取日期
@@ -64,7 +60,7 @@ public class PlantationUserSignServiceImpl implements PlantationUserSignService 
         return ResultUtil.entResult(opt, result);
     }
 
-    public EntityResult<PlantationUserSignPO> getSignByDate(UserEnvironmentInfo envir, UserBuyContext context, UserBaseInfo userInfo, String dateStr) {
+    public EntityResult<PlantationUserSignPO> getSignByDate(UserEnvironmentInfo envir, UserBaseInfo userInfo, String dateStr) {
         PlantationUserSignPO result = new PlantationUserSignPO();
         OptResult opt = new OptResult();
         // 获取日期
